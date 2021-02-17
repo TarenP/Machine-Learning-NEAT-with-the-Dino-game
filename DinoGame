@@ -169,7 +169,7 @@ def main():
     clock = pygame.time.Clock()
     player = Dinosaur()
     cloud = Cloud()
-    game_speed = 10
+    game_speed = 14
     x_pos_bg = 0
     y_pos_bg = 380
     points = 0
