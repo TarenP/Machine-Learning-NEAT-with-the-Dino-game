@@ -249,6 +249,7 @@ def eval_genomes(genomes, config):
                 dinosaur.dino_jump = False
                 dinosaur.dino_run = False
                 dinosaur.dino_duck = True
+            #print(obstacle.rect.y)
 
         statistics()
         score()
