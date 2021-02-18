@@ -3,6 +3,7 @@ import os
 import random
 import neat
 import math
+import sys
 
 pygame.init()
 
@@ -135,8 +136,8 @@ class Bird(Obstacle):
     def __init__(self, image):
         self.type = 0
         super().__init__(image, self.type)
-        self.rect.y = 250
-        self.rect.width = BIRD[0].get_width() +  80
+        self.rect.y = 205
+        self.rect.height = LARGE_CACTUS[2].get_height() + 20
         self.index = 0
 
     def draw(self, SCREEN):
@@ -239,7 +240,7 @@ def eval_genomes(genomes, config):
                     remove(i)
 
         for i, dinosaur in enumerate(dinosaurs):
-            output = nets[i].activate(((dinosaur.rect.y), distance((dinosaur.rect.x, dinosaur.rect.y), obstacle.rect.midtop), obstacle.rect.y))
+            output = nets[i].activate((dinosaur.rect.y, distance((dinosaur.rect.x, dinosaur.rect.y), obstacle.rect.midtop), obstacle.rect.y))
             if output[0] > 0.5 and dinosaur.rect.y == dinosaur.Y_POS:
                 dinosaur.dino_jump = True
                 dinosaur.dino_run = False
