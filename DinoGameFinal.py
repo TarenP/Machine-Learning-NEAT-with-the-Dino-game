@@ -61,9 +61,6 @@ class Dinosaur:
     def update(self):
         if self.dino_duck:
             self.duck()
-            self.rect = self.duck_img[0].get_rect()
-            self.rect.x = self.X_POS
-            self.rect.y = self.Y_POS_DUCK
         if self.dino_run:
             self.run()
         if self.dino_jump:
@@ -74,9 +71,9 @@ class Dinosaur:
 
     def duck(self):
         self.image = self.duck_img[self.step_index // 5]
-        self.dino_rect = self.image.get_rect()
-        self.dino_rect.x = self.X_POS
-        self.dino_rect.y = self.Y_POS_DUCK
+        self.rect_ = self.image.get_rect()
+        self.rect_.x = self.X_POS
+        self.rect_.y = self.Y_POS_DUCK
         self.step_index += 1
 
     def run(self):
@@ -171,7 +168,7 @@ def eval_genomes(genomes, config):
 
     x_pos_bg = 0
     y_pos_bg = 380
-    game_speed = 20
+    game_speed = 14
 
     for genome_id, genome in genomes:
         dinosaurs.append(Dinosaur())
@@ -231,16 +228,19 @@ def eval_genomes(genomes, config):
                 obstacles.append(LargeCactus(LARGE_CACTUS, random.randint(0, 2)))
             elif rand_int == 2:
                 obstacles.append(Bird(BIRD))
+
         for obstacle in obstacles:
             obstacle.draw(SCREEN)
             obstacle.update()
             for i, dinosaur in enumerate(dinosaurs):
-                if dinosaur.rect.colliderect(obstacle.rect):
+                if dinosaur.rect.colliderect(obstacle.rect) and rand_int == 2 and dinosaur.dino_duck == True:
+                        print("nice")
+                elif dinosaur.rect.colliderect(obstacle.rect):
                     ge[i].fitness -= 1
                     remove(i)
 
         for i, dinosaur in enumerate(dinosaurs):
-            output = nets[i].activate((dinosaur.rect.y, distance((dinosaur.rect.x, dinosaur.rect.y), obstacle.rect.midtop), obstacle.rect.y))
+            output = nets[i].activate((dinosaur.rect.y, distance((dinosaur.rect.x, dinosaur.rect.y), obstacle.rect.midtop), obstacle.rect.y, game_speed, obstacle.rect.y))
             if output[0] > 0.5 and dinosaur.rect.y == dinosaur.Y_POS:
                 dinosaur.dino_jump = True
                 dinosaur.dino_run = False
@@ -249,6 +249,10 @@ def eval_genomes(genomes, config):
                 dinosaur.dino_jump = False
                 dinosaur.dino_run = False
                 dinosaur.dino_duck = True
+            if output[2] > 0.5 and dinosaur.rect.y == dinosaur.Y_POS:
+                dinosaur.dino_jump = False
+                dinosaur.dino_run = True
+                dinosaur.dino_duck = False
             #print(obstacle.rect.y)
 
         statistics()
@@ -270,7 +274,7 @@ def run(config_path):
     )
 
     pop = neat.Population(config)
-    pop.run(eval_genomes, 10000)
+    pop.run(eval_genomes, 10000000000)
 
 
 if __name__ == '__main__':
