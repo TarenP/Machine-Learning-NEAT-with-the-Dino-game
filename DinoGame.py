@@ -7,8 +7,8 @@ import math
 pygame.init()
 
 # Global Constants
-SCREEN_HEIGHT = 1080
-SCREEN_WIDTH = 1440
+SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1100
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 RUNNING = [pygame.image.load(os.path.join("Assets/Dino", "DinoRun1.png")),
@@ -114,7 +114,7 @@ class Obstacle:
             obstacles.pop()
 
     def draw(self, SCREEN):
-        #pygame.draw.rect(SCREEN, self.color2, (self.rect.x, self.rect.y, self.rect.width, self.rect.height), 2)
+        pygame.draw.rect(SCREEN, self.color2, (self.rect.x, self.rect.y, self.rect.width, self.rect.height), 2)
         SCREEN.blit(self.image[self.type], self.rect)
 
 
@@ -131,7 +131,7 @@ class LargeCactus(Obstacle):
 
 class Bird(Obstacle):
     color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-    
+
     def __init__(self, image):
         self.type = 0
         super().__init__(image, self.type)
