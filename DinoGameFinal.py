@@ -187,7 +187,7 @@ def eval_genomes(genomes, config):
         SCREEN.blit(text, (950, 50))
 
     def statistics():
-        global dinosaurs, game_speed, ge
+        global dinosaurs, game_speed, ge, text_1
         text_1 = FONT.render(f'Dinosaurs Alive:  {str(len(dinosaurs))}', True, (0, 0, 0))
         text_2 = FONT.render(f'Generation:  {pop.generation+1}', True, (0, 0, 0))
         text_3 = FONT.render(f'Game Speed:  {str(game_speed)}', True, (0, 0, 0))
@@ -238,13 +238,19 @@ def eval_genomes(genomes, config):
             obstacle.update()
             for i, dinosaur in enumerate(dinosaurs):
                 if dinosaur.rect.colliderect(obstacle.rect) and rand_int == 2 and dinosaur.dino_duck == True:
-                        print("nice")
+                        pass
                 elif dinosaur.rect.colliderect(obstacle.rect):
-                    ge[i].fitness -= 1
-                    remove(i)
+                    if len(dinosaurs) <=5:
+                        ge[i].fitness += 1
+                        remove(i)
+                    else:
+                        ge[i].fitness -= 1
+                        remove(i)
+                
+
 
         for i, dinosaur in enumerate(dinosaurs):
-            output = nets[i].activate((dinosaur.rect.y, distance((dinosaur.rect.x, dinosaur.rect.y), obstacle.rect.midtop), game_speed, obstacle.rect.x, input_obstacle))
+            output = nets[i].activate((dinosaur.rect.y, distance((dinosaur.rect.x, dinosaur.rect.y), obstacle.rect.midtop), game_speed, obstacle.rect.x, input_obstacle, points, obstacle.rect.y))
             if output[0] > 0.5 and dinosaur.rect.y == dinosaur.Y_POS:
                 dinosaur.dino_jump = True
                 dinosaur.dino_run = False
