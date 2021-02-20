@@ -237,6 +237,8 @@ def eval_genomes(genomes, config):
             obstacle.draw(SCREEN)
             obstacle.update()
             for i, dinosaur in enumerate(dinosaurs):
+                if points > 1000:
+                    ge[i].fitness += 2
                 if dinosaur.rect.colliderect(obstacle.rect) and rand_int == 2 and dinosaur.dino_duck == True:
                         pass
                 elif dinosaur.rect.colliderect(obstacle.rect):
