@@ -157,11 +157,12 @@ def distance(pos_a, pos_b):
 
 
 def eval_genomes(genomes, config):
-    global game_speed, x_pos_bg, y_pos_bg, obstacles, dinosaurs, ge, nets, points
+    global game_speed, x_pos_bg, y_pos_bg, obstacles, dinosaurs, ge, nets, points, input_obstacle
     clock = pygame.time.Clock()
     points = 0
 
     obstacles = []
+    input_obstacle = ""
     dinosaurs = []
     ge = []
     nets = []
@@ -224,10 +225,13 @@ def eval_genomes(genomes, config):
             rand_int = random.randint(0, 2)
             if rand_int == 0:
                 obstacles.append(SmallCactus(SMALL_CACTUS, random.randint(0, 2)))
+                input_obstacle = 0
             elif rand_int == 1:
                 obstacles.append(LargeCactus(LARGE_CACTUS, random.randint(0, 2)))
+                input_obstacle = 1
             elif rand_int == 2:
                 obstacles.append(Bird(BIRD))
+                input_obstacle = 2
 
         for obstacle in obstacles:
             obstacle.draw(SCREEN)
@@ -240,7 +244,7 @@ def eval_genomes(genomes, config):
                     remove(i)
 
         for i, dinosaur in enumerate(dinosaurs):
-            output = nets[i].activate((dinosaur.rect.y, distance((dinosaur.rect.x, dinosaur.rect.y), obstacle.rect.midtop), obstacle.rect.y, game_speed, obstacle.rect.y))
+            output = nets[i].activate((dinosaur.rect.y, distance((dinosaur.rect.x, dinosaur.rect.y), obstacle.rect.midtop), game_speed, obstacle.rect.x, input_obstacle))
             if output[0] > 0.5 and dinosaur.rect.y == dinosaur.Y_POS:
                 dinosaur.dino_jump = True
                 dinosaur.dino_run = False
@@ -249,10 +253,6 @@ def eval_genomes(genomes, config):
                 dinosaur.dino_jump = False
                 dinosaur.dino_run = False
                 dinosaur.dino_duck = True
-            if output[2] > 0.5 and dinosaur.rect.y == dinosaur.Y_POS:
-                dinosaur.dino_jump = False
-                dinosaur.dino_run = True
-                dinosaur.dino_duck = False
             #print(obstacle.rect.y)
 
         statistics()
