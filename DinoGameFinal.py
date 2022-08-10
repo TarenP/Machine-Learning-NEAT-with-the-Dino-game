@@ -253,6 +253,8 @@ def eval_genomes(genomes, config):
 
         for i, dinosaur in enumerate(dinosaurs):
             output = nets[i].activate((dinosaur.rect.y, distance((dinosaur.rect.x, dinosaur.rect.y), obstacle.rect.midtop), game_speed, obstacle.rect.x, input_obstacle, points, obstacle.rect.y))
+            print(output[0])
+            print(output[1])
             if output[0] > 0.5 and dinosaur.rect.y == dinosaur.Y_POS:
                 dinosaur.dino_jump = True
                 dinosaur.dino_run = False
